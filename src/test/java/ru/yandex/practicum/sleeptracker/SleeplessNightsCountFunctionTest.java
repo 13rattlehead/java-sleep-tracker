@@ -28,7 +28,7 @@ public class SleeplessNightsCountFunctionTest {
     void testOneSleeplessNight() {
         List<SleepingSession> sessions = new ArrayList<>();
         sessions.add(new SleepingSession(
-                LocalDateTime.of(2023, 10, 10 , 22, 0),
+                LocalDateTime.of(2023, 10, 10, 22, 0),
                 LocalDateTime.of(2023, 10, 11, 6, 0),
                 SleepTag.BAD
         ));
@@ -41,19 +41,20 @@ public class SleeplessNightsCountFunctionTest {
     void testOverlappingSession() {
         List<SleepingSession> sessions = new ArrayList<>();
         sessions.add(new SleepingSession(
-                LocalDateTime.of(2023, 10 , 10 , 22, 0),
+                LocalDateTime.of(2023, 10, 10, 22, 0),
                 LocalDateTime.of(2023, 10, 11, 2, 0),
                 SleepTag.NORMAL
         ));
         sessions.add(new SleepingSession(
-                LocalDateTime.of(2023,10,11,1, 0),
-                LocalDateTime.of(2023,10,11,6,0),
+                LocalDateTime.of(2023, 10, 11, 1, 0),
+                LocalDateTime.of(2023, 10, 11, 6, 0),
                 SleepTag.NORMAL
         ));
         SleepAnalysisResult result = function.apply(sessions);
         assertEquals("Бессонных ночей", result.getTitle());
         assertEquals(String.valueOf(1), result.getValue());
     }
+
     @Test
     void testSleepOutsideWindow() {
         List<SleepingSession> sessions = new ArrayList<>();

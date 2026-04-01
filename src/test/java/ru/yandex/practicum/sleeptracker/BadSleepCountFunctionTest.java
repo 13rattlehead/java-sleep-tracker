@@ -17,16 +17,13 @@ class BadSleepCountFunctionTest {
 
     @Test
     void testApplyWithAllBadSleep() {
-        // Arrange
         BadSleepCountFunction function = new BadSleepCountFunction();
         List<SleepingSession> sessions = new ArrayList<>();
         sessions.add(new SleepingSession(LocalDateTime.now(), LocalDateTime.now().plusHours(8), SleepTag.BAD));
         sessions.add(new SleepingSession(LocalDateTime.now(), LocalDateTime.now().plusHours(7), SleepTag.BAD));
 
-        // Act
         SleepAnalysisResult result = function.apply(sessions);
 
-        // Assert
         assertEquals("Количество плохих сна", result.getTitle());
         assertEquals("2", result.getValue());
     }

@@ -44,7 +44,7 @@ public class SleepingSessionLoaderTest {
     void testLoadWithEmptyLines() throws IOException {
 
         File tempFile = tempDir.resolve("sessions_with_empty_lines.csv").toFile();
-        try(FileWriter writer = new FileWriter(tempFile)) {
+        try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write("01.01.23 22:00;02.01.23 06:00;GOOD\n");
             writer.write("\n");
             writer.write("02.01.23 23:00;03.01.23 07:00;NORMAL\n");
@@ -55,7 +55,7 @@ public class SleepingSessionLoaderTest {
     @Test
     void testLoadWithInvalidFormat() throws IOException {
         File tempFile = tempDir.resolve("invalid_format.txt").toFile();
-        try(FileWriter writer = new FileWriter(tempFile)) {
+        try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write("01.01.23 22:00;02.01.23 06:00\n");
         }
 
