@@ -1,81 +1,62 @@
 package ru.yandex.practicum.sleeptracker;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.FileWriter;
-import java.nio.file.Path;
+import org.junit.jupiter.api.BeforeEach;
 import java.time.LocalDateTime;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import ru.yandex.practicum.sleeptracker.SleepingSessionLoader;
 
-public class SleepingSessionLoaderTest {
+class SleepingSessionLoaderTest {
 
-    @TempDir
-    Path tempDir;
+    private SleepingSessionLoader loader;
 
-    @Test
-    void testLoadValidFile() throws IOException {
-        // Создаем временный файл с корректными данными
-        File tempFile = tempDir.resolve("sessions.csv").toFile();
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write("01.01.23 22:00;02.01.23 06:00;GOOD\n");
-            writer.write("02.01.23 23:00;03.01.23 07:00;NORMAL\n");
-        }
-
-        SleepingSessionLoader loader = new SleepingSessionLoader();
-
-        List<SleepingSession> sessions = loader.load(tempFile.getAbsolutePath());
-
-        assertEquals(2, sessions.size());
-        assertEquals(LocalDateTime.of(2023, 1, 1, 22, 0), sessions.get(0).getStartTime());
-        assertEquals(LocalDateTime.of(2023, 1, 2, 6, 0), sessions.get(0).getEndTime());
-        assertEquals(SleepTag.GOOD, sessions.get(0).getSleepTag());
-        assertEquals(LocalDateTime.of(2023, 1, 2, 23, 0), sessions.get(1).getStartTime());
-        assertEquals(LocalDateTime.of(2023, 1, 3, 7, 0), sessions.get(1).getEndTime());
-        assertEquals(SleepTag.NORMAL, sessions.get(1).getSleepTag());
+    @BeforeEach
+    void setUp() {
+        loader = new SleepingSessionLoader();
     }
 
     @Test
-    void testLoadWithEmptyLines() throws IOException {
+    void parseLine_ValidLine_ReturnsSleepingSession() {
+        String line = "01.01.23 22:00;02.01.23 06:00;GOOD";
 
-        File tempFile = tempDir.resolve("sessions_with_empty_lines.csv").toFile();
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write("01.01.23 22:00;02.01.23 06:00;GOOD\n");
-            writer.write("\n");
-            writer.write("02.01.23 23:00;03.01.23 07:00;NORMAL\n");
-            writer.write("\n");
-        }
+        SleepingSession session = loader.parseLine(line);
+
+        assertEquals(LocalDateTime.of(2023, 1, 1, 22, 0), session.getStartTime());
+        assertEquals(LocalDateTime.of(2023, 1, 2, 6, 0), session.getEndTime());
+        assertEquals(SleepTag.GOOD, session.getSleepTag());
     }
 
     @Test
-    void testLoadWithInvalidFormat() throws IOException {
-        File tempFile = tempDir.resolve("invalid_format.txt").toFile();
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write("01.01.23 22:00;02.01.23 06:00\n");
-        }
+    void parseLine_InvalidFormat_ThrowsIllegalArgumentException() {
+        String line = "01.01.23 22:00;02.01.23 06:00";
 
-        SleepingSessionLoader loader = new SleepingSessionLoader();
-        assertThrows(IllegalArgumentException.class,
-                () -> loader.load(tempFile.getAbsolutePath()));
-    }
-
-    @Test
-    void testLoadFileWithInvalidDateTimeFormat() throws IOException {
-        // Создаем временный файл с некорректным форматом даты
-        File tempFile = tempDir.resolve("invalid_datetime.csv").toFile();
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write("2023-01-01 22:00;02.01.23 06:00;GOOD\n");
-        }
-
-        SleepingSessionLoader loader = new SleepingSessionLoader();
-        assertThrows(java.time.format.DateTimeParseException.class, () -> {
-            loader.load(tempFile.getAbsolutePath());
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            loader.parseLine(line);
         });
+
+        assertEquals("Неверный формат строки: " + line, exception.getMessage());
     }
 
+    @Test
+    void parseLine_InvalidDateTimeFormat_ThrowsIllegalArgumentException() {
+        String line = "invalid_date;02.01.23 06:00;GOOD";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            loader.parseLine(line);
+        });
+
+        assertTrue(exception.getMessage().startsWith("Неверный формат даты и времени: "));
+    }
+
+    @Test
+    void parseLine_InvalidTag_ThrowsIllegalArgumentException() {
+        String line = "01.01.23 22:00;02.01.23 06:00;INVALID_TAG";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            loader.parseLine(line);
+        });
+
+        assertTrue(exception.getMessage().startsWith("Неверный формат тега: "));
+    }
 }

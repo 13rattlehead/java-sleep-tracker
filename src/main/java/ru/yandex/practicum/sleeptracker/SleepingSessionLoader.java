@@ -36,7 +36,7 @@ public class SleepingSessionLoader {
 
     }
 
-    private SleepingSession parseLine(String line) {
+    public SleepingSession parseLine(String line) {
         String[] parts = line.split(";");
 
         if (parts.length != 3) {
