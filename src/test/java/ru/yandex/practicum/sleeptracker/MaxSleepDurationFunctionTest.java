@@ -1,9 +1,6 @@
 package ru.yandex.practicum.sleeptracker;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.sleeptracker.SleepAnalysisResult;
-import ru.yandex.practicum.sleeptracker.SleepingSession;
-import ru.yandex.practicum.sleeptracker.SleepTag;
 import ru.yandex.practicum.sleeptracker.functions.MaxSleepDurationFunction;
 
 import java.time.LocalDateTime;

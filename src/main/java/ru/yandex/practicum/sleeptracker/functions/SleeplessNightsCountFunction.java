@@ -44,7 +44,7 @@ public class SleeplessNightsCountFunction implements Function<List<SleepingSessi
 
     private boolean hasSleepInNightWindow(List<SleepingSession> sessions, LocalDate night) {
         LocalDateTime windowStart = LocalDateTime.of(night, LocalTime.MIDNIGHT);        // 00:00
-        LocalDateTime windowEnd   = LocalDateTime.of(night, LocalTime.of(6, 0));       // 06:00
+        LocalDateTime windowEnd = LocalDateTime.of(night, LocalTime.of(6, 0));       // 06:00
 
         return sessions.stream().anyMatch(session ->
                 overlaps(session.getStartTime(), session.getEndTime(), windowStart, windowEnd)

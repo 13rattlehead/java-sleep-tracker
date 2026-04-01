@@ -14,10 +14,7 @@ public class MaxSleepDurationFunction implements Function<List<SleepingSession>,
         if (sessions.isEmpty()) {
             return new SleepAnalysisResult("Минимальная продолжительность сна", "0 минут");
         }
-        int maxDuration = sessions.stream()
-                .mapToInt(SleepingSession::getDurationInMinutes)
-                .max()
-                .orElse(0);
+        int maxDuration = sessions.stream().mapToInt(SleepingSession::getDurationInMinutes).max().orElse(0);
         return new SleepAnalysisResult("Максимальная продолжительность сна", maxDuration + " минут");
     }
 }
