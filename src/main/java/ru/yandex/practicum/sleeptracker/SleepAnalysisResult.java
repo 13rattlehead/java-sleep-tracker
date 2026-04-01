@@ -1,8 +1,8 @@
 package ru.yandex.practicum.sleeptracker;
 
 public class SleepAnalysisResult {
-    private final String title;   // понятное название для пользователя
-    private final String value;   // результат в виде строки
+    private final String title;
+    private final String value;
 
     public SleepAnalysisResult(String title, String value) {
         this.title = title;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class SleepingSessionLoader {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
@@ -44,11 +45,18 @@ public class SleepingSessionLoader {
             throw new IllegalArgumentException("Неверный формат строки: " + line);
         }
 
-        LocalDateTime startTime = LocalDateTime.parse(parts[0], DATE_TIME_FORMATTER);
-        LocalDateTime endTime = LocalDateTime.parse(parts[1], DATE_TIME_FORMATTER);
-        SleepTag sleepTag = SleepTag.valueOf(parts[2]);
+        try {
+            LocalDateTime startTime = LocalDateTime.parse(parts[0], DATE_TIME_FORMATTER);
+            LocalDateTime endTime = LocalDateTime.parse(parts[1], DATE_TIME_FORMATTER);
+            SleepTag sleepTag = SleepTag.valueOf(parts[2]);
 
-        return new SleepingSession(startTime, endTime, sleepTag);
+            return new SleepingSession(startTime, endTime, sleepTag);
+        } catch (DateTimeException e) {
+            throw new IllegalArgumentException("Неверный формат даты и времени: " + line, e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Неверный формат тега: " + line, e);
+        }
+
     }
 
 }

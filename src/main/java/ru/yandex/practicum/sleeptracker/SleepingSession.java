@@ -15,6 +15,10 @@ public class SleepingSession {
         this.sleepTag = sleepTag;
     }
 
+    public SleepingSession() {
+
+    }
+
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -33,5 +37,13 @@ public class SleepingSession {
 
     public int getDurationInHours() {
         return (int) Duration.between(startTime, endTime).toHours();
+    }
+
+    public void setStartTime(LocalDateTime of) {
+        this.startTime = of;
+    }
+
+    public void setEndTime(LocalDateTime of) {
+        this.endTime = of;
     }
 }
