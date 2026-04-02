@@ -13,7 +13,7 @@ import java.util.List;
 public class SleepingSessionLoader {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
-
+    private static final int numOfParts = 3;
     public List<SleepingSession> load(String fileName) throws FileNotFoundException {
 
         Path path = Paths.get(fileName);
@@ -39,7 +39,7 @@ public class SleepingSessionLoader {
     public SleepingSession parseLine(String line) {
         String[] parts = line.split(";");
 
-        if (parts.length != 3) {
+        if (parts.length != numOfParts) {
             throw new IllegalArgumentException("Неверный формат строки: " + line);
         }
 
